@@ -1,17 +1,25 @@
 import { logo } from "../assets/index";
-import Summarize from "../components/Summarize"
+import Summarize from "../components/Summarize";
 
 const Home = () => {
   return (
-    <div>
+    <div className="min-h-[100vh]">
       <header className="flex items-center justify-between px-6 py-3">
         <div>
           <img src={logo} alt="Summarize" className="'w-28 object-contain'" />
         </div>
         <div>
-          <a href="">
-            <button className="">Github</button>
-          </a>
+          <button
+            className=""
+            onClick={() =>
+              window.open(
+                "https://github.com/Emmah-oo/SummarizeAI/blob/master/src/services/summarize.js",
+                "_blank"
+              )
+            }
+          >
+            Github
+          </button>
         </div>
       </header>
 
@@ -25,7 +33,7 @@ const Home = () => {
             </span>
           </h1>
         </div>
-        <div className="flex items-center justify-center text-center text-lg text-slate-600">
+        <div className="flex items-center justify-center text-center text-lg text-slate-600 px-4">
           <p>
             Summarize your reading with summarize, an open-source article
             summarizer that transforms lengthy articles into clear and concise
