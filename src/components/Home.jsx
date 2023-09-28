@@ -1,4 +1,5 @@
 import { logo } from "../assets/index";
+import Summarize from "../components/Summarize"
 
 const Home = () => {
   return (
@@ -9,7 +10,7 @@ const Home = () => {
         </div>
         <div>
           <a href="">
-            <button className="black_btn">Github</button>
+            <button className="">Github</button>
           </a>
         </div>
       </header>
@@ -18,13 +19,23 @@ const Home = () => {
         <div className="flex items-center justify-center my-10 text-center">
           <h1 className="text-5xl font-bold">
             Summarize <br /> Articles with <br />{" "}
-            <h1 className="bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;">
+            <span className="bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent">
               {" "}
               OpenAI GPT-4{" "}
-            </h1>
+            </span>
           </h1>
         </div>
-        <div></div>
+        <div className="flex items-center justify-center text-center text-lg text-slate-600">
+          <p>
+            Summarize your reading with summarize, an open-source article
+            summarizer that transforms lengthy articles into clear and concise
+            summary
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <Summarize />
       </section>
     </div>
   );
