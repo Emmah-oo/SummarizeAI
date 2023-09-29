@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { linkIcon, loader, copy, tick } from "../assets/index";
 import { useLazyGetSummaryQuery } from "../services/summarize";
 
@@ -13,10 +13,11 @@ const Summarize = () => {
   //RTK lazy query
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
+  //Fetches the data and adds it to the article object, also pushes the data to the newUrlHistory array of objects
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { data } = await getSummary({ articleUrl: article.url });
-    setArticle((prev) => ({ ...prev, summary: data.summary }));
+    setArticle((prev) => ({ ...prev, summary: data.summary || data }));
 
     console.log(data.summary);
 
@@ -27,13 +28,23 @@ const Summarize = () => {
         summary: data.summary,
       },
     ];
+    localStorage.setItem("urlHistory", JSON.stringify(newUrlHistory));
     setUrlHistory(newUrlHistory);
   };
 
-  const handleLinkClick = (url) => {
-    setArticle((prev) => ({ ...prev, url }));
-    handleSubmit();
+  const handleLinkClick = (url, summary) => {
+    setArticle((prev) => ({ ...prev, url, summary }));
+    // handleSubmit();
   };
+
+  useEffect(() => {
+    // const storedUrlHistory = localStorage.getItem("urlHistory");
+  
+    // if (storedUrlHistory) {
+      
+    //   setUrlHistory(storedUrlHistory);
+    // }
+  }, []);
   return (
     <div className="mb-5">
       <form
@@ -61,11 +72,10 @@ const Summarize = () => {
             <div
               key={i}
               className="flex gap-2 cursor-pointer"
-              onClick={() => handleLinkClick(url)}
+              onClick={() => handleLinkClick(url.url, url.summary)}
             >
               <img src={copy || tick} alt="copy" className="cursor-pointer" />
               <h1>{url.url}</h1>
-              <p>{url.summary}</p>
             </div>
           ))}
         </div>
