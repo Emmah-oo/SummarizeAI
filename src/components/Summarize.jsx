@@ -3,8 +3,11 @@ import { linkIcon, loader, copy, tick } from "../assets/index";
 import { useLazyGetSummaryQuery } from "../services/summarize";
 
 const Summarize = () => {
-  const [url, setUrl] = useState("");
-  const [summary, setSummary] = useState("");
+  const [article, setArticle] = useState({
+    url: "",
+    summary: "",
+  });
+
   const [urlHistory, setUrlHistory] = useState([]);
 
   //RTK lazy query
@@ -12,17 +15,23 @@ const Summarize = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await getSummary({ articleUrl: url });
-    setSummary(data.summary);
+    const { data } = await getSummary({ articleUrl: article.url });
+    setArticle((prev) => ({ ...prev, summary: data.summary }));
 
-    console.log(data);
+    console.log(data.summary);
 
-    const newUrl = [...urlHistory, url];
-    setUrlHistory(newUrl);
+    const newUrlHistory = [
+      ...urlHistory, // Copy the existing history
+      {
+        url: article.url,
+        summary: data.summary,
+      },
+    ];
+    setUrlHistory(newUrlHistory);
   };
 
   const handleLinkClick = (url) => {
-    setUrl(url);
+    setArticle((prev) => ({ ...prev, url }));
     handleSubmit();
   };
   return (
@@ -37,8 +46,10 @@ const Summarize = () => {
             type="url"
             placeholder="Enter a URL"
             className="outline-none w-[100%]"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            value={article.url}
+            onChange={(e) =>
+              setArticle((prev) => ({ ...prev, url: e.target.value }))
+            }
           />
         </div>
         <div className="cursor-pointer">⮐</div>
@@ -53,7 +64,8 @@ const Summarize = () => {
               onClick={() => handleLinkClick(url)}
             >
               <img src={copy || tick} alt="copy" className="cursor-pointer" />
-              <h1>{url}</h1>
+              <h1>{url.url}</h1>
+              <p>{url.summary}</p>
             </div>
           ))}
         </div>
@@ -66,7 +78,7 @@ const Summarize = () => {
           ) : error ? (
             <p className="mt-10">An error occurred</p>
           ) : (
-            <p className="mt-10 px-4">{summary}</p>
+            <p className="mt-10 px-4">{article.summary}</p>
           )}
         </div>
       </section>
