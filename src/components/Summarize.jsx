@@ -10,16 +10,18 @@ const Summarize = () => {
 
   const [urlHistory, setUrlHistory] = useState([]);
 
+  const [copied, setCopied] = useState("");
+
   //RTK lazy query
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
   //Fetches the data and adds it to the article object, also pushes the data to the newUrlHistory array of objects
   const handleSubmit = async (e) => {
+    setArticle((prev) => ({ ...prev, url: "" }));
     e.preventDefault();
     const { data } = await getSummary({ articleUrl: article.url });
-    setArticle((prev) => ({ ...prev, summary: data.summary || data }));
 
-    console.log(data.summary);
+    setArticle((prev) => ({ ...prev, summary: data.summary || data }));
 
     const newUrlHistory = [
       ...urlHistory, // Copy the existing history
@@ -28,22 +30,26 @@ const Summarize = () => {
         summary: data.summary,
       },
     ];
-    localStorage.setItem("urlHistory", JSON.stringify(newUrlHistory));
+    localStorage.setItem("urlHistory", JSON.stringify(urlHistory));
     setUrlHistory(newUrlHistory);
   };
 
   const handleLinkClick = (url, summary) => {
     setArticle((prev) => ({ ...prev, url, summary }));
-    // handleSubmit();
+    
+  };
+
+  const handleCopy = (url) => {
+    setCopied(url);
+    navigator.clipboard.writeText(url);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   useEffect(() => {
-    // const storedUrlHistory = localStorage.getItem("urlHistory");
-  
-    // if (storedUrlHistory) {
-      
-    //   setUrlHistory(storedUrlHistory);
-    // }
+    const storedUrlHistory = JSON.parse(localStorage.getItem("urlHistory"));
+    if (storedUrlHistory) {
+      setUrlHistory(storedUrlHistory);
+    }
   }, []);
   return (
     <div className="mb-5">
@@ -69,13 +75,19 @@ const Summarize = () => {
       <section>
         <div className="flex flex-col justify-center w-[80%] m-auto pt-5 gap-2">
           {urlHistory.map((url, i) => (
-            <div
-              key={i}
-              className="flex gap-2 cursor-pointer"
-              onClick={() => handleLinkClick(url.url, url.summary)}
-            >
-              <img src={copy || tick} alt="copy" className="cursor-pointer" />
-              <h1>{url.url}</h1>
+            <div key={i} className="flex gap-2">
+              <img
+                src={copied === url.url ? tick : copy}
+                alt="copy"
+                className="cursor-pointer"
+                onClick={() => handleCopy(url.url)}
+              />
+              <h1
+                className="text-blue-700 font-medium text-sm truncate cursor-pointer"
+                onClick={() => handleLinkClick(url.url, url.summary)}
+              >
+                {url.url}
+              </h1>
             </div>
           ))}
         </div>

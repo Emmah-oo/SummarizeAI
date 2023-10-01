@@ -10,10 +10,10 @@ const Home = () => {
         </div>
         <div>
           <button
-            className=""
+            className="bg-black text-white px-3 py-2 rounded-md"
             onClick={() =>
               window.open(
-                "https://github.com/Emmah-oo/SummarizeAI/blob/master/src/services/summarize.js",
+                "https://github.com/Emmah-oo/SummarizeAI",
                 "_blank"
               )
             }
