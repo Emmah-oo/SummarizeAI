@@ -36,7 +36,6 @@ const Summarize = () => {
 
   const handleLinkClick = (url, summary) => {
     setArticle((prev) => ({ ...prev, url, summary }));
-    
   };
 
   const handleCopy = (url) => {
@@ -69,7 +68,9 @@ const Summarize = () => {
             }
           />
         </div>
-        <div className="cursor-pointer">⮐</div>
+        <div onClick={handleSubmit} className="cursor-pointer">
+          ⮐
+        </div>
       </form>
 
       <section>
